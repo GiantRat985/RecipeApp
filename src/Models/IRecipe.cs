@@ -1,29 +1,28 @@
-﻿namespace RecipeApp
+﻿using System.Security.Policy;
+
+namespace RecipeApp
 {
-    /// <summary>
-    /// Holds information about a recipe.
-    /// </summary>
-    public class Recipe(string title, string? url, string? description, string? body, byte[]? thumbnail) : IRecipe
+    public interface IRecipe
     {
         /// <summary>
         /// Recipe title.
         /// </summary>
-        public string Title { get; } = title;
+        public string Title { get; }
         /// <summary>
         /// Holds the URL for a recipe if the recipe is gathered from the internet.
         /// </summary>
-        public string? URL { get; } = url;
+        public string? URL { get; }
         /// <summary>
         /// Description of the recipe; time to cook, servings, summary.
         /// </summary>
-        public string? Description { get; } = description;
+        public string? Description { get; }
         /// <summary>
         /// Main body of the recipe; directions, ingredients, notes.
         /// </summary>
-        public string? Body { get; } = body;
+        public string? Body { get; }
         /// <summary>
         /// Optional thumbnail image, saved as a byte array.
         /// </summary>
-        public byte[]? Thumbnail { get; } = thumbnail;
+        public byte[]? Thumbnail { get; }
     }
 }
