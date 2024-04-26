@@ -3,8 +3,12 @@
     /// <summary>
     /// Holds information about a recipe.
     /// </summary>
-    public class Recipe(string title, string? url, string? description, string? body, byte[]? thumbnail) : IRecipe
+    public class Recipe(int id, string title, string? url, string? description, string? body, byte[]? thumbnail) : IRecipe
     {
+        /// <summary>
+        /// Pirmary key ID used in database.
+        /// </summary>
+        public int ID { get; } = id;
         /// <summary>
         /// Recipe title.
         /// </summary>

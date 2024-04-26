@@ -4,6 +4,7 @@ namespace RecipeApp
 {
     public interface IRecipe
     {
+        public int ID { get; }
         /// <summary>
         /// Recipe title.
         /// </summary>
