@@ -2,14 +2,9 @@
 
 namespace RecipeApp
 {
-    public class RecipeAppDbContextFactory
+    public class RecipeAppDbContextFactory(string connectionString)
     {
-        private readonly string _connectionString;
-
-        public RecipeAppDbContextFactory(string connectionString)
-        {
-            _connectionString = connectionString;
-        }
+        private readonly string _connectionString = connectionString;
 
         public RecipeAppDbContext CreateDbContext()
         {

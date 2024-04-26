@@ -1,7 +1,7 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using System.Windows;
+using System.IO;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace RecipeApp
@@ -11,27 +11,42 @@ namespace RecipeApp
     /// </summary>
     public partial class App : Application
     {
-        private string CONNECTION_STRING = "Data Source=recipeapp.db";
+        private string _connectionString = null!;
         private IServiceProvider? _serviceProvider;
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
-            CreateDbContexts();
+            SetupConfiguration();
 
-            CreateServiceProvider();
+            SetupServiceProvider();
+
+            CreateDbContexts();
 
             var mainWindow = _serviceProvider!.GetService<MainWindow>();
             mainWindow!.Show();
         }
 
-        private void CreateServiceProvider()
+        #region Setup Methods
+
+        private void SetupConfiguration()
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            
+            IConfigurationRoot configuration = builder.Build();
+
+            _connectionString = configuration.GetSection("AppSettings")["ConnectionString"]!;
+        }
+
+        private void SetupServiceProvider()
         {
             var serviceCollection = new ServiceCollection()
                 .AddSingleton<MainWindow>()
 
-                .AddTransient<RecipeAppDbContextFactory>()
+                .AddTransient(sp => new RecipeAppDbContextFactory(_connectionString))
                 ;
             
             _serviceProvider = serviceCollection.BuildServiceProvider();
@@ -39,12 +54,12 @@ namespace RecipeApp
 
         private void CreateDbContexts()
         {
-            DbContextOptions options = new DbContextOptionsBuilder().UseSqlite(CONNECTION_STRING).Options;
-            using (RecipeAppDbContext context  = new RecipeAppDbContext(options))
-            {
-                context.Database.Migrate();
-            }
+            DbContextOptions options = new DbContextOptionsBuilder().UseSqlite(_connectionString).Options;
+
+            using RecipeAppDbContext context = new(options);
+            context.Database.Migrate();
         }
     }
 
+    #endregion
 }
