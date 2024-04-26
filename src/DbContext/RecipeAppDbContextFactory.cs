@@ -1,21 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace NoteApp.DbContexts
+namespace RecipeApp
 {
-    public class NoteAppDbContextFactory
+    public class RecipeAppDbContextFactory
     {
         private readonly string _connectionString;
 
-        public NoteAppDbContextFactory(string connectionString)
+        public RecipeAppDbContextFactory(string connectionString)
         {
             _connectionString = connectionString;
         }
 
-        public NoteAppDbContext CreateDbContext()
+        public RecipeAppDbContext CreateDbContext()
         {
             DbContextOptions options = new DbContextOptionsBuilder().UseSqlite(_connectionString).Options;
 
-            return new NoteAppDbContext(options);
+            return new RecipeAppDbContext(options);
         }
     }
 }
