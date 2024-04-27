@@ -22,7 +22,11 @@
             <RadioButton Margin="5 5 5 5"
                          Content="Search"/>
             <RadioButton Margin="5 5 5 5"
-                         Content="Add"/>
+                         Content="Create"/>
         </StackPanel>
+
+        <Frame Grid.Row="1" Grid.Column="1">
+            
+        </Frame>
     </Grid>
 </Window>
