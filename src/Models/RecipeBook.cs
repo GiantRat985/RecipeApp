@@ -1,6 +1,6 @@
 ﻿namespace RecipeApp
 {
-    public class RecipeBook(IRecipeCreator recipeCreator, IRecipeProvider recipeProvider, IRecipeUpdater recipeUpdater, IRecipeDeleter recipeDeleter)
+    public class RecipeBook(IRecipeCreator recipeCreator, IRecipeProvider recipeProvider, IRecipeUpdater recipeUpdater, IRecipeDeleter recipeDeleter) : IRecipeBook
     {
         private readonly IRecipeCreator _recipeCreator = recipeCreator;
         private readonly IRecipeProvider _recipeProvider = recipeProvider;
