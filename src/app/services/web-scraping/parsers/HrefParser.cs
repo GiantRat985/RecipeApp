@@ -10,28 +10,19 @@ namespace RecipeApp
 {
     public class HrefParser : IParser
     {
+        private readonly IDataFetcher _dataFetcher;
+
+        public HrefParser(IDataFetcher dataFetcher)
+        {
+            _dataFetcher = dataFetcher;
+        }
+
         public async Task<string?> ParseAsync(string url)
         {
-            var document = await GetHTMLDocumentAsync(url);
+            var document = await _dataFetcher.FetchAndCacheAsync(url);
             var printNodes = FindPrintNodes(document);
             var hyperlink = FindNodeWithHref(printNodes);
             return hyperlink;
-        }
-
-        /// <summary>
-        /// Retrieves an <see cref="HtmlDocument"/> from a given url.
-        /// </summary>
-        /// <param name="url">url of the desired site</param>
-        /// <returns>an <see cref="HtmlDocument"/></returns>
-        private async Task<HtmlDocument> GetHTMLDocumentAsync(string url)
-        {
-            var httpClient = new HttpClient();
-            var response = await httpClient.GetAsync(url);
-            response.EnsureSuccessStatusCode();
-            var htmlContent = await response.Content.ReadAsStringAsync();
-            var htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(htmlContent);
-            return htmlDocument;
         }
 
         /// <summary>
