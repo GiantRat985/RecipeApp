@@ -8,7 +8,10 @@ using HtmlAgilityPack;
 
 namespace RecipeApp
 {
-    public class ActionParser : IParser
+    /// <summary>
+    /// Parser using print node based searching. Attempts to find the hyperlink in the action attribute of the print button on a web page.
+    /// </summary>
+    public class ActionParser : PrintNodeParserBase
     {
         private readonly IDataFetcher _dataFetcher;
 
@@ -17,7 +20,8 @@ namespace RecipeApp
             _dataFetcher = fetcher;
         }
 
-        public async Task<string?> ParseAsync(string url)
+
+        public override async Task<string?> ParseAsync(string url)
         {
             var document = await _dataFetcher.FetchAndCacheAsync(url);
             var printNodes = FindPrintNodes(document);
@@ -25,25 +29,6 @@ namespace RecipeApp
             return hyperlink;
         }
 
-        /// <summary>
-        /// Parses the <see cref="HtmlDocument"/> for a node with the string "print" in its class attribute.
-        /// </summary>
-        /// <param name="htmlDocument">HtmlDocument to parse</param>
-        /// <returns>a collection of nodes that contain "print"</returns>
-        /// <exception cref="ArgumentNullException">thrown if no nodes are found</exception>
-        private HtmlNodeCollection FindPrintNodes(HtmlDocument document)
-        {
-            var printNodes = document.DocumentNode.SelectNodes("[class*='print']");
-
-            if (printNodes == null)
-            {
-                throw new ArgumentNullException("Unable to find print node.");
-            }
-            else
-            {
-                return printNodes;
-            }
-        }
 
         /// <summary>
         /// Attempts to extract the print page hyperlink from the action attribute in the given nodes.
