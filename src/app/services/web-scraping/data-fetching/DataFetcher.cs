@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Concurrent;
 using System.Net.Http;
 using HtmlAgilityPack;
 
@@ -9,12 +6,10 @@ namespace RecipeApp
 {
     public class DataFetcher : IDataFetcher
     {
-        private readonly HttpClient _httpClient;
         private readonly ConcurrentDictionary<string, HtmlDocument> _cache;
 
-        public DataFetcher(HttpClient httpClient)
+        public DataFetcher()
         {
-            _httpClient = httpClient;
             _cache = new ConcurrentDictionary<string, HtmlDocument>();
         }
 
@@ -34,8 +29,9 @@ namespace RecipeApp
                 return cachedData;
             }
 
-            //If not found, load, cache and return new data
-            var response = await _httpClient.GetAsync(url);
+            // If data is not found, create a new HTTP client, and load data from url
+            var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
             var htmlContent = await response.Content.ReadAsStringAsync();
             htmlDocument.LoadHtml(htmlContent);

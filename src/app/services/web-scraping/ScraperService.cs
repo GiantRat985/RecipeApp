@@ -1,18 +1,21 @@
-﻿using System.Net.Http;
-using HtmlAgilityPack;
-
-
-namespace RecipeApp
+﻿namespace RecipeApp
 {
     /// <summary>
     /// Scrapes data from web pages.
     /// </summary>
     /// <param name="actionParser"></param>
     /// <param name="hrefParser"></param>
+    /// <remarks>
+    /// 
+    /// TODO: A managing class should be implemented to manage parsers.
+    /// 
+    /// </remarks>
     public class ScraperService(IParser actionParser, IParser hrefParser)
     {
+        // These fields should be wrapped in a managing class to allow for easier expansion
         private readonly IParser _actionParser = actionParser;
         private readonly IParser _hrefParser = hrefParser;
+
 
         /// <summary>
         /// Attempts to extract hyperlink from a url asynchronously
