@@ -18,7 +18,8 @@ namespace RecipeApp
         /// <exception cref="ArgumentNullException">thrown if no nodes are found</exception>
         protected HtmlNodeCollection FindPrintNodes(HtmlDocument document)
         {
-            var printNodes = document.DocumentNode.SelectNodes("[class*='print']");
+            string xpathQuery = "//*[@class[contains(., 'print')]]";
+            var printNodes = document.DocumentNode.SelectNodes(xpathQuery);
 
             if (printNodes == null)
             {

@@ -39,10 +39,10 @@ namespace RecipeApp
         {
             foreach (var node in nodes)
             {
-                var action = node.GetAttributeValue("action", null);
-                if (!string.IsNullOrEmpty(action))
+                var action = node.Attributes["action"];
+                if (action != null && !string.IsNullOrEmpty(action.Value))
                 {
-                    return action;
+                    return action.Value;
                 }
             }
             return null;
