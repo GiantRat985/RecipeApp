@@ -10,16 +10,11 @@ namespace RecipeApp
     /// <param name="hrefParser"></param>
     public class ScraperService
     {
-        private List<IParser> _parsers = new List<IParser>();
+        private readonly ParserManager _parserManager;
 
-        public ScraperService(IDataFetcher dataFetcher)
+        public ScraperService(ParserManager parserManager)
         {
-            // Initialize parsers here.
-            _parsers = new List<IParser>()
-            {
-                new ActionParser(dataFetcher),
-                new HrefParser(dataFetcher),
-            };
+            _parserManager = parserManager;
         }
 
         /// <summary>
@@ -31,7 +26,7 @@ namespace RecipeApp
         public async Task<string> ScrapeWebPageAsync(string url)
         {
 
-            foreach (var parser in _parsers)
+            foreach (var parser in _parserManager)
             {
                 var hyperlink = await parser.ParseAsync(url);
                 if (hyperlink != null)
