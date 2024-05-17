@@ -4,6 +4,6 @@ namespace RecipeApp
 {
     public class RecipeAppDbContext(DbContextOptions options) : DbContext(options)
     {
-        public DbSet<RecipeDTO> Recipes { get; set; }
+        public DbSet<RecipeHtml> RecipesHtmlFormat { get; set; }
     }
 }

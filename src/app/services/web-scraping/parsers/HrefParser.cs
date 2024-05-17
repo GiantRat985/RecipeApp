@@ -32,7 +32,7 @@ namespace RecipeApp
         /// Attempts to extract the print page hyperlink from the href attribute in the given nodes.
         /// </summary>
         /// <param name="nodes">Collection of nodes to parse</param>
-        /// <returns>the recipe's hyperlink <see cref="string"/></returns>
+        /// <returns>the recipe's hyperlink <see cref="string"/> or null if parsing is unsuccessful.</returns>
         private string? FindNodeWithHref(HtmlNodeCollection nodes)
         {
             foreach (var node in nodes)

@@ -29,7 +29,7 @@ namespace RecipeApp
             foreach (var parser in _parserManager)
             {
                 var hyperlink = await parser.ParseAsync(url);
-                if (hyperlink != null)
+                if (!string.IsNullOrEmpty(hyperlink))
                 {
                     return hyperlink;
                 }

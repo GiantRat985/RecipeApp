@@ -34,13 +34,13 @@ namespace RecipeApp
         /// Attempts to extract the print page hyperlink from the action attribute in the given nodes.
         /// </summary>
         /// <param name="nodes">Collection of nodes to parse</param>
-        /// <returns>the recipe's hyperlink <see cref="string"/></returns>
+        /// <returns>the recipe's hyperlink <see cref="string"/> or null if parsing is unsuccessful.</returns>
         private string? FindNodeWithAction(HtmlNodeCollection nodes)
         {
             foreach (var node in nodes)
             {
                 var action = node.Attributes["action"];
-                if (action != null && !string.IsNullOrEmpty(action.Value))
+                if (!string.IsNullOrEmpty(action.Value))
                 {
                     return action.Value;
                 }

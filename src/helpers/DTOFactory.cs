@@ -1,17 +1,14 @@
 ﻿namespace RecipeApp
 {
-    public static class DTOConverter
+    public static class DTOFactory
     {
-        public static RecipeDTO ConvertToDTO(IRecipe recipe)
+        public static RecipeDTO ConvertToDTO(RecipeHtml recipe)
         {
             return new RecipeDTO
             {
                 ID = recipe.ID,
                 Title = recipe.Title,
-                URL = recipe.URL,
-                Description = recipe.Description,
-                Body = recipe.Body,
-                Thumbnail = recipe.Thumbnail,
+                
             };
         }
 
