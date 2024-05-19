@@ -5,8 +5,11 @@ namespace RecipeApp
     /// <summary>
     /// Interface for parsers that use an <see cref="HtmlDocument"/> as the parameter
     /// </summary>
-    public interface IParserAsync
+    /// <remarks>
+    /// 
+    /// </remarks>
+    public interface IParser
     {
-        public Task<string?> ParseAsync(string url);
+        public string? Parse(string content);
     }
 }

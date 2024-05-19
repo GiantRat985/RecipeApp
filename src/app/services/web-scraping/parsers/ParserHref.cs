@@ -11,19 +11,19 @@ namespace RecipeApp
     /// <summary>
     /// Parser using print node based searching. Attempts to find the hyperlink in the href attribute of the print button on a web page.
     /// </summary>
-    public class HrefParser : PrintNodeParserBase
+    public class ParserHref : PrintNodeParserBase
     {
-        private readonly IDataFetcher _dataFetcher;
-
-        public HrefParser(IDataFetcher dataFetcher)
+        private const string hrefNode = "href";
+        public override string? Parse(string content)
         {
-            _dataFetcher = dataFetcher;
-        }
+            // Loads data into an HtmlDocument to be parsed.
+            var document = new HtmlDocument();
+            document.LoadHtml(content);
 
-        public override async Task<string?> ParseAsync(string url)
-        {
-            var document = await _dataFetcher.FetchAndCacheAsync(url);
+            // Parses data for a print button.
             var printNodes = FindPrintNodes(document);
+
+            // Parses print button node for the print page link.
             var hyperlink = FindNodeWithHref(printNodes);
             return hyperlink;
         }
@@ -37,7 +37,7 @@ namespace RecipeApp
         {
             foreach (var node in nodes)
             {
-                var href = node.GetAttributeValue("href", null);
+                var href = node.GetAttributeValue(hrefNode, null);
                 if (!string.IsNullOrEmpty(href))
                 {
                     return href;

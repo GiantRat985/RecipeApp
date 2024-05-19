@@ -11,20 +11,20 @@ namespace RecipeApp
     /// <summary>
     /// Parser using print node based searching. Attempts to find the hyperlink in the action attribute of the print button on a web page.
     /// </summary>
-    public class ActionParser : PrintNodeParserBase
+    public class ParserAction : PrintNodeParserBase
     {
-        private readonly IDataFetcher _dataFetcher;
+        private const string actionNode = "action";
 
-        public ActionParser(IDataFetcher fetcher)
+        public override string? Parse(string content)
         {
-            _dataFetcher = fetcher;
-        }
+            // Loads data into an HtmlDocument to be parsed.
+            var document = new HtmlDocument();
+            document.LoadHtml(content);
 
-
-        public override async Task<string?> ParseAsync(string url)
-        {
-            var document = await _dataFetcher.FetchAndCacheAsync(url);
+            // Parses data for a print button.
             var printNodes = FindPrintNodes(document);
+
+            // Parses print button node for the print page link.
             var hyperlink = FindNodeWithAction(printNodes);
             return hyperlink;
         }
@@ -39,10 +39,10 @@ namespace RecipeApp
         {
             foreach (var node in nodes)
             {
-                var action = node.Attributes["action"];
-                if (!string.IsNullOrEmpty(action.Value))
+                var action = node.GetAttributeValue(actionNode, null);
+                if (!string.IsNullOrEmpty(action))
                 {
-                    return action.Value;
+                    return action;
                 }
             }
             return null;

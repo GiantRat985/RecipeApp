@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="src\app\view-models\" />
     <Folder Include="src\helpers\" />
   </ItemGroup>
 

@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace RecipeApp
 {
-    public class ParserManager : IEnumerable<IParserAsync>
+    public class ParserManager : IEnumerable<IParser>
     {
-        public List<IParserAsync> Parsers { get; }
+        public List<IParser> Parsers { get; }
 
-        public ParserManager(IDataFetcher dataFetcher)
+        public ParserManager()
         {
-            Parsers = new List<IParserAsync>
+            Parsers = new List<IParser>
             {
-                new ActionParser(dataFetcher),
-                new HrefParser(dataFetcher)
+                new ParserAction(),
+                new ParserHref()
             };
         }
 
-        public IEnumerator<IParserAsync> GetEnumerator()
+        public IEnumerator<IParser> GetEnumerator()
         {
             return Parsers.GetEnumerator();
         }

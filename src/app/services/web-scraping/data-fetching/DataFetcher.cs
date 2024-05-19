@@ -6,22 +6,21 @@ namespace RecipeApp
 {
     public class DataFetcher : IDataFetcher
     {
-        private readonly ConcurrentDictionary<string, HtmlDocument> _cache;
+        private readonly ConcurrentDictionary<string, string> _cache;
 
         public DataFetcher()
         {
-            _cache = new ConcurrentDictionary<string, HtmlDocument>();
+            _cache = new ConcurrentDictionary<string, string>();
         }
 
         /// <summary>
         /// Fetches data associated with the given url as an asynchronous operation.
         /// </summary>
         /// <param name="url"></param>
-        /// <returns>The <see cref="HtmlDocument"/> associated with the given url.</returns>
-        public async Task<HtmlDocument> FetchAndCacheAsync(string url)
+        /// <returns>The html content <see cref="string"/>.</returns>
+        public async Task<string> FetchAndCacheAsync(string url)
         {
             var key = url.GetHashCode().ToString();
-            var htmlDocument = new HtmlDocument();
 
             //If data is found in the cache, return data
             if (_cache.TryGetValue(key, out var cachedData))
@@ -34,10 +33,9 @@ namespace RecipeApp
             var response = await httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
             var htmlContent = await response.Content.ReadAsStringAsync();
-            htmlDocument.LoadHtml(htmlContent);
-            _cache.TryAdd(key, htmlDocument);
+            _cache.TryAdd(key, htmlContent);
 
-            return htmlDocument;
+            return htmlContent;
         }
     }
 }

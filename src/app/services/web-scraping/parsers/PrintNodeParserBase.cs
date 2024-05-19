@@ -6,9 +6,9 @@ namespace RecipeApp
     /// <summary>
     /// Base class for parsers using the print node of a web page.
     /// </summary>
-    public abstract class PrintNodeParserBase : IParserAsync
+    public abstract class PrintNodeParserBase : IParser
     {
-        public abstract Task<string?> ParseAsync(string url);
+        public abstract string? Parse(string url);
 
         /// <summary>
         /// Parses the <see cref="HtmlDocument"/> for a node with the string "print" in its class attribute.
