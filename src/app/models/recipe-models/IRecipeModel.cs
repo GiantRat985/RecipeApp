@@ -8,7 +8,7 @@ namespace RecipeApp
         /// Main database key.
         /// </summary>
         public int ID { get; }
-        public string Title { get; }
         public DateTime DateAdded { get; }
+        public string Content { get; }
     }
 }

@@ -1,25 +1,20 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace RecipeApp
 {
-    public class RecipeHtml : IRecipeModel
+    public class RecipeModelHtml : IRecipeModel
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; }
-        public string Title { get; }
         public DateTime DateAdded { get; }
         public string Content { get; }
-        public string UserNotes { get; }
 
-        public RecipeHtml(string title, string content, string notes)
+        public RecipeModelHtml(string content)
         {
-            Title = title;
             Content = content;
-            UserNotes = notes;
             DateAdded = DateTime.Now;
         }
     }
