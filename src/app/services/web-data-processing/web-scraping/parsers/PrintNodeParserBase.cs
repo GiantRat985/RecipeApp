@@ -1,5 +1,6 @@
 ﻿
 using HtmlAgilityPack;
+using RecipeApp.Exceptions;
 
 namespace RecipeApp
 {
@@ -23,11 +24,22 @@ namespace RecipeApp
 
             if (printNodes == null)
             {
-                throw new ArgumentNullException(nameof(document), "Unable to find print node.");
+                throw new ParsingFailureException("Unable to find print node.");
             }
             else
             {
                 return printNodes;
+            }
+        }
+        protected bool ValidateLink(string url)
+        {
+            if (url.Contains("https") || url.Contains(".com") || url.Contains(".org"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }

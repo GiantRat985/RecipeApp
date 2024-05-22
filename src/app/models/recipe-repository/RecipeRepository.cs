@@ -9,25 +9,23 @@ namespace RecipeApp
     /// <summary>
     /// Model layer abstraction for repository commands.
     /// </summary>
-    public class RecipeBook(IRepository<RecipeHtml> repository)
+    public class RecipeRepository(IRepository<RecipeModelHtml> repository)
     {
-        private readonly IRepository<RecipeHtml> _repository = repository;
+        private readonly IRepository<RecipeModelHtml> _repository = repository;
 
-        #region Repository Methods
-
-        public async Task CreateRecipe(RecipeHtml recipe)
+        public async Task CreateRecipe(RecipeModelHtml recipe)
         {
             await _repository.AddAsync(recipe);
         }
-        public async Task<IEnumerable<RecipeHtml>> GetAllRecipesAsync()
+        public async Task<IEnumerable<RecipeModelHtml>> GetAllRecipesAsync()
         {
             return await _repository.GetAllAsync();
         }
-        public async Task<RecipeHtml> GetRecipeAsync(int id)
+        public async Task<RecipeModelHtml> GetRecipeAsync(int id)
         {
             return await _repository.GetAsync(id);
         }
-        public async Task UpdateRecipe(RecipeHtml recipe)
+        public async Task UpdateRecipe(RecipeModelHtml recipe)
         {
             await _repository.UpdateAsync(recipe);
         }
@@ -35,7 +33,5 @@ namespace RecipeApp
         {
             await _repository.DeleteAsync(id);
         }
-
-        #endregion
     }
 }

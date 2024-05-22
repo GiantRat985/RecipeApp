@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using RecipeApp.Exceptions;
 
 namespace RecipeApp
 {
@@ -16,16 +17,23 @@ namespace RecipeApp
         private const string hrefNode = "href";
         public override string? Parse(string content)
         {
-            // Loads data into an HtmlDocument to be parsed.
-            var document = new HtmlDocument();
-            document.LoadHtml(content);
+            try
+            {
+                // Loads data into an HtmlDocument to be parsed.
+                var document = new HtmlDocument();
+                document.LoadHtml(content);
 
-            // Parses data for a print button.
-            var printNodes = FindPrintNodes(document);
+                // Parses data for a print button.
+                var printNodes = FindPrintNodes(document);
 
-            // Parses print button node for the print page link.
-            var hyperlink = FindNodeWithHref(printNodes);
-            return hyperlink;
+                // Parses print button node for the print page link.
+                var hyperlink = FindNodeWithHref(printNodes);
+                return hyperlink;
+            }
+            catch (ParsingFailureException)
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -33,17 +41,20 @@ namespace RecipeApp
         /// </summary>
         /// <param name="nodes">Collection of nodes to parse</param>
         /// <returns>the recipe's hyperlink <see cref="string"/> or null if parsing is unsuccessful.</returns>
-        private string? FindNodeWithHref(HtmlNodeCollection nodes)
+        private string FindNodeWithHref(HtmlNodeCollection nodes)
         {
             foreach (var node in nodes)
             {
                 var href = node.GetAttributeValue(hrefNode, null);
                 if (!string.IsNullOrEmpty(href))
                 {
-                    return href;
+                    if (ValidateLink(href))
+                    {
+                        return href;
+                    }
                 }
             }
-            return null;
+            throw new ParsingFailureException("Unable to find an href node.");
         }
     }
 }

@@ -17,7 +17,7 @@ namespace RecipeApp
         /// Fetches data associated with the given url as an asynchronous operation.
         /// </summary>
         /// <param name="url"></param>
-        /// <returns>The html content <see cref="string"/>.</returns>
+        /// <returns>The html content <see langword="string"/>.</returns>
         public async Task<string> FetchAndCacheAsync(string url)
         {
             var key = url.GetHashCode().ToString();
@@ -29,12 +29,24 @@ namespace RecipeApp
             }
 
             // If data is not found, create a new HTTP client, and load data from url
-            var httpClient = new HttpClient();
+            using var httpClient = new HttpClient();
             var response = await httpClient.GetAsync(url);
-            response.EnsureSuccessStatusCode();
-            var htmlContent = await response.Content.ReadAsStringAsync();
-            _cache.TryAdd(key, htmlContent);
 
+            // Ensure success
+            try
+            {
+                response.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException)
+            {
+                throw;
+            }
+
+            var htmlContent = await response.Content.ReadAsStringAsync() 
+                ?? throw new NullReferenceException("Unable to read site contents.");
+
+            // Cache data
+            _cache.TryAdd(key, htmlContent);
             return htmlContent;
         }
     }

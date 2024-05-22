@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="src\app\services\web-data-processing\data-formatting\" />
     <Folder Include="src\helpers\" />
   </ItemGroup>
 

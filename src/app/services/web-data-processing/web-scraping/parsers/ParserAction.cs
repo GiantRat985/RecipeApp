@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using RecipeApp.Exceptions;
 
 namespace RecipeApp
 {
@@ -17,16 +18,23 @@ namespace RecipeApp
 
         public override string? Parse(string content)
         {
-            // Loads data into an HtmlDocument to be parsed.
-            var document = new HtmlDocument();
-            document.LoadHtml(content);
+            try
+            {
+                // Loads data into an HtmlDocument to be parsed.
+                var document = new HtmlDocument();
+                document.LoadHtml(content);
 
-            // Parses data for a print button.
-            var printNodes = FindPrintNodes(document);
+                // Parses data for a print button.
+                var printNodes = FindPrintNodes(document);
 
-            // Parses print button node for the print page link.
-            var hyperlink = FindNodeWithAction(printNodes);
-            return hyperlink;
+                // Parses print button node for the print page link.
+                var hyperlink = FindNodeWithAction(printNodes);
+                return hyperlink;
+            }
+            catch (ParsingFailureException)
+            {
+                return null;
+            }
         }
 
 
@@ -35,17 +43,21 @@ namespace RecipeApp
         /// </summary>
         /// <param name="nodes">Collection of nodes to parse</param>
         /// <returns>the recipe's hyperlink <see cref="string"/> or null if parsing is unsuccessful.</returns>
-        private string? FindNodeWithAction(HtmlNodeCollection nodes)
+        private string FindNodeWithAction(HtmlNodeCollection nodes)
         {
             foreach (var node in nodes)
             {
                 var action = node.GetAttributeValue(actionNode, null);
                 if (!string.IsNullOrEmpty(action))
                 {
-                    return action;
+                    if (ValidateLink(action))
+                    {
+                        return action;
+
+                    }
                 }
             }
-            return null;
+            throw new ParsingFailureException();
         }
     }
 }

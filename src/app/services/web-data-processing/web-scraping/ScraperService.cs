@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Windows;
+using HtmlAgilityPack;
+using RecipeApp.Exceptions;
 
 namespace RecipeApp
 {
@@ -27,7 +29,7 @@ namespace RecipeApp
         /// <param name="url">targeted web page</param>
         /// <returns><see cref="string"/> contents of the recipe page.</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public async Task<string?> ScrapeWebPageAsync(string url)
+        public async Task<string> ScrapeWebPageAsync(string url)
         {
             // Fetch page contents
             var content = await _fetcher.FetchAndCacheAsync(url);
@@ -44,9 +46,10 @@ namespace RecipeApp
             }
 
             // If none can be found:
-            MessageBox.Show("Unable to find recipe.");
-            return null;
+            throw new ParsingFailureException($"{nameof(ScrapeWebPageAsync)} failed. Unable to find data.");
         }
+
+
     }
 }
 
