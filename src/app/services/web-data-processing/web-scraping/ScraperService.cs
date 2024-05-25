@@ -6,21 +6,24 @@ using RecipeApp.Exceptions;
 namespace RecipeApp
 {
     /// <summary>
-    /// Scrapes data from web pages.
+    /// Scrapes data from web pages
     /// </summary>
     /// <param name="actionParser"></param>
     /// <param name="hrefParser"></param>
+    /// <remarks>
+    /// This class should be registered with the service collection
+    /// </remarks>
     public class ScraperService : IScraper
     {
         private readonly IDataFetcher _fetcher;
         private readonly ParserManager _parserManager;
         private readonly RecipeExtractor _recipeExtractor;
 
-        public ScraperService(ParserManager parserManager, IDataFetcher fetcher, RecipeExtractor recipeExtractor)
+        public ScraperService(IDataFetcher fetcher)
         {
-            _parserManager = parserManager;
             _fetcher = fetcher;
-            _recipeExtractor = recipeExtractor;
+            _parserManager = new ParserManager();
+            _recipeExtractor = new RecipeExtractor(fetcher);
         }
 
         /// <summary>
@@ -45,7 +48,7 @@ namespace RecipeApp
                 }
             }
 
-            // If none can be found:
+            // If none can be found, throw exception
             throw new ParsingFailureException($"{nameof(ScrapeWebPageAsync)} failed. Unable to find data.");
         }
 
