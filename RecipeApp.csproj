@@ -23,6 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="appsettings.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Folder Include="src\app\services\web-data-processing\data-formatting\" />
     <Folder Include="src\helpers\" />
   </ItemGroup>
