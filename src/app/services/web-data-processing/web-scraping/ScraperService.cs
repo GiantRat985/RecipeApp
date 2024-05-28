@@ -51,8 +51,6 @@ namespace RecipeApp
             // If none can be found, throw exception
             throw new ParsingFailureException($"{nameof(ScrapeWebPageAsync)} failed. Unable to find data.");
         }
-
-
     }
 }
 
