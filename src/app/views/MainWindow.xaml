@@ -3,9 +3,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:RecipeApp"
+        xmlns:local="clr-namespace:RecipeApp" d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type local:MainViewModel}">
+            <local:HomeView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type local:ImportViewModel}">
+            <local:ImportView />
+        </DataTemplate>
+    </Window.Resources>
+    
+    <!--Main window grid-->
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100"/>
@@ -16,17 +27,25 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
+        <!--Left side navigation panel-->
         <StackPanel Grid.Row="1" Grid.Column="0">
-            <RadioButton Margin="5 5 5 5"
-                         Content="Home"/>
-            <RadioButton Margin="5 5 5 5"
-                         Content="Search"/>
-            <RadioButton Margin="5 5 5 5"
-                         Content="Create"/>
+            <ItemsControl ItemsSource="{Binding Pages.Values}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding Name}"
+                                     Command="{Binding DataContext.ChangeViewCommand, 
+                                                       RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                     CommandParameter="{Binding ID}"
+                                     FontSize="14"
+                                     Margin="10 10 10 10"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </StackPanel>
 
-        <Frame Grid.Row="1" Grid.Column="1">
-            
-        </Frame>
+        <Frame Grid.Row="1" Grid.Column="1"
+               x:Name="MainFrame"
+               Content="{Binding CurrentPageViewModel}"
+               NavigationUIVisibility="Hidden"/>
     </Grid>
 </Window>
