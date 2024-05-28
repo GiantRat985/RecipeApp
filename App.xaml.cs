@@ -3,22 +3,27 @@ using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+using RecipeApp.src;
 
 namespace RecipeApp
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
+    /// <remarks>
+    /// TODO: Need to change the db context to use the new recipe models
+    /// </remarks>
     public partial class App : Application
     {
-        private string _connectionString = null!;
         private IServiceProvider? _serviceProvider;
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
-            SetupConfiguration();
+            // Setup config
+            AppConfig.LoadCongifuration("appsettings.json");
 
             SetupServiceProvider();
 
@@ -28,25 +33,27 @@ namespace RecipeApp
             mainWindow!.Show();
         }
 
-        #region Setup Methods
-
-        private void SetupConfiguration()
-        {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-            
-            IConfigurationRoot configuration = builder.Build();
-
-            _connectionString = configuration.GetSection("AppSettings")["ConnectionString"]!;
-        }
-
         private void SetupServiceProvider()
         {
             var serviceCollection = new ServiceCollection()
-                .AddSingleton<MainWindow>()
+                .AddScoped<MainWindow>()
 
-                .AddTransient(sp => new RecipeAppDbContextFactory(_connectionString))
+                // Setup view models
+                .AddScoped<MainViewModel>()
+                .AddScoped<HomeViewModel>()
+                .AddScoped<ImportViewModel>()
+                
+                // Setup dbcontext
+                .AddTransient(sp => new RecipeAppDbContextFactory(AppConfig.Settings.DbConnectionString))
+
+                // Setup services
+                .AddScoped<IDataFetcher, DataFetcher>()
+                .AddScoped<IScraper, ScraperService>()
+
+                .AddScoped<INavigationService, WpfNavigationService>()
+
+                // Setup view models
+                .AddScoped<IPageViewModel, ImportViewModel>()
                 ;
             
             _serviceProvider = serviceCollection.BuildServiceProvider();
@@ -54,12 +61,10 @@ namespace RecipeApp
 
         private void CreateDbContexts()
         {
-            DbContextOptions options = new DbContextOptionsBuilder().UseSqlite(_connectionString).Options;
+            DbContextOptions options = new DbContextOptionsBuilder().UseSqlite(AppConfig.Settings.DbConnectionString).Options;
 
             using RecipeAppDbContext context = new(options);
             context.Database.Migrate();
         }
     }
-
-    #endregion
 }
