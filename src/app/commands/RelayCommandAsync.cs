@@ -7,12 +7,12 @@ using System.Windows.Input;
 
 namespace RecipeApp
 {
-    public class RelayCommand : ICommand
+    public class RelayCommandAsync : ICommand
     {
-        private readonly Action<object?> _execute;
+        private readonly Func<object?, Task> _execute;
         private readonly Predicate<object?> _canExecute;
 
-        public RelayCommand(Action<object?> execute, Predicate<object?> canExecute)
+        public RelayCommandAsync(Func<object?, Task> execute, Predicate<object?> canExecute)
         {
             _execute = execute;
             _canExecute = canExecute;
@@ -26,7 +26,7 @@ namespace RecipeApp
 
         public bool CanExecute(object? parameter)
         {
-            return true;
+            return _canExecute(parameter);
         }
 
         public void Execute(object? parameter)
