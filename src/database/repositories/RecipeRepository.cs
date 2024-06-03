@@ -2,16 +2,18 @@
 
 namespace RecipeApp
 {
-    public class RecipeRepository<T> : IRepository<T> where T : class
+    /// <summary>
+    /// Repository class to handle CRUD functions.
+    /// </summary>
+    /// <typeparam name="TRecipeModel">a <see cref="RecipeModelBase"/> type that will be
+    /// set as the type of the DbSet</typeparam>
+    public class RecipeRepository
     {
         private readonly RecipeAppDbContextFactory _dbContextFactory;
-        private readonly DbSet<T> _dbSet;
 
         public RecipeRepository(RecipeAppDbContextFactory dbContextFactory)
         {
             _dbContextFactory = dbContextFactory;
-            using var context = _dbContextFactory.CreateDbContext();
-            _dbSet = context.Set<T>();
         }
 
         /// <summary>
@@ -19,10 +21,10 @@ namespace RecipeApp
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public async Task AddAsync(T item)
+        public async Task AddAsync(RecipeData item)
         {
             using var context = _dbContextFactory.CreateDbContext();
-            await _dbSet.AddAsync(item);
+            await context.RecipeSet.AddAsync(item);
             await context.SaveChangesAsync();
         }
 
@@ -34,12 +36,12 @@ namespace RecipeApp
         public async Task DeleteAsync(int id)
         {
             using var context = _dbContextFactory.CreateDbContext();
-            var item = _dbSet.Find(id);
+            var item = context.RecipeSet.Find(id);
             if (item == null)
             {
                 return;
             }
-            context.Remove(item);
+            context.RecipeSet.Remove(item);
             await context.SaveChangesAsync();
         }
 
@@ -47,10 +49,10 @@ namespace RecipeApp
         /// Gets all entities in the <see cref="DbSet{T}"/> asynchronously.
         /// </summary>
         /// <returns>An <see cref="IEnumerable{T}"/> of the corresponding type.</returns>
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<RecipeData>> GetAllAsync()
         {
-            using var dbContext = _dbContextFactory.CreateDbContext();
-            return await _dbSet.ToListAsync();
+            using var context = _dbContextFactory.CreateDbContext();
+            return await context.RecipeSet.ToListAsync();
         }
 
         /// <summary>
@@ -58,14 +60,16 @@ namespace RecipeApp
         /// </summary>
         /// <param name="id">ID of the desired entity.</param>
         /// <returns>An object of type <see cref="Type"/></returns>
-        public async Task<T> GetAsync(int id)
+        public async Task<RecipeData> GetAsync(int id)
         {
             using var context = _dbContextFactory.CreateDbContext();
-            var item = await _dbSet.FindAsync(id);
+            var item = await context.RecipeSet.FindAsync(id);
+
             if (item == null)
             {
-                return null;
+                throw new NullReferenceException($"Entity ID:{id} could not be found.");
             }
+
             return item;
         }
 
@@ -74,10 +78,10 @@ namespace RecipeApp
         /// </summary>
         /// <param name="item">Item to be updated.</param>
         /// <returns></returns>
-        public async Task UpdateAsync(T item)
+        public async Task UpdateAsync(RecipeData item)
         {
             using var context = _dbContextFactory.CreateDbContext();
-            _dbSet.Attach(item);
+            context.RecipeSet.Attach(item);
             await context.SaveChangesAsync();
         }
     }
