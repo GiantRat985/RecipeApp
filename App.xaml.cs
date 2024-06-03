@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using RecipeApp.src;
+using AutoMapper;
 
 namespace RecipeApp
 {
@@ -42,18 +43,16 @@ namespace RecipeApp
                 .AddScoped<MainViewModel>()
                 .AddScoped<HomeViewModel>()
                 .AddScoped<ImportViewModel>()
+                .AddTransient<ViewAllViewModel>()
                 
                 // Setup dbcontext
-                .AddTransient(sp => new RecipeAppDbContextFactory(AppConfig.Settings.DbConnectionString))
+                .AddSingleton<RecipeAppDbContextFactory>(sp => new(AppConfig.Settings.DbConnectionString))
 
                 // Setup services
                 .AddScoped<IDataFetcher, DataFetcher>()
                 .AddScoped<IScraper, ScraperService>()
-
-                .AddScoped<INavigationService, WpfNavigationService>()
-
-                // Setup view models
-                .AddScoped<IPageViewModel, ImportViewModel>()
+                .AddScoped<WebProcessor>()
+                .AddTransient<RecipeRepository>()
                 ;
             
             _serviceProvider = serviceCollection.BuildServiceProvider();

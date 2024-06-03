@@ -9,6 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="src\app\services\web-data-processing\data-formatting\**" />
+    <EmbeddedResource Remove="src\app\services\web-data-processing\data-formatting\**" />
+    <None Remove="src\app\services\web-data-processing\data-formatting\**" />
+    <Page Remove="src\app\services\web-data-processing\data-formatting\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4" />
@@ -26,7 +34,6 @@
     <None Update="appsettings.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Folder Include="src\app\services\web-data-processing\data-formatting\" />
     <Folder Include="src\helpers\" />
   </ItemGroup>
 
