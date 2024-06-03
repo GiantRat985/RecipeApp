@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RecipeApp
@@ -14,6 +15,9 @@ namespace RecipeApp
         public override string ID { get; } = nameof(ImportViewModel);
         public override string Name { get; } = "Import";
         public ICommand ImportCommand { get; }
+
+        private bool _commandBusy;
+        private readonly WebProcessor _webProcessor;
         private string _mainUrl = "";
         public string MainUrl
         {
@@ -28,11 +32,9 @@ namespace RecipeApp
             }
         }
 
-        private readonly IScraper _scraper;
-
-        public ImportViewModel(IScraper scraper)
+        public ImportViewModel(WebProcessor webProcessor)
         {
-            _scraper = scraper;
+            _webProcessor = webProcessor;
 
             // Initialize commands
             ImportCommand = new RelayCommandAsync(ExecuteImport, CanExecuteImport);
@@ -41,12 +43,25 @@ namespace RecipeApp
         private bool CanExecuteImport(object? obj)
         {
             // Cannot execute if the main url field is empty.
-            return !string.IsNullOrWhiteSpace(MainUrl);
+            return !string.IsNullOrWhiteSpace(MainUrl) && _commandBusy == false;
         }
 
         private async Task ExecuteImport(object? obj)
         {
-            await _scraper.ScrapeWebPageAsync(MainUrl);
+            try
+            {
+                _commandBusy = true;
+                await _webProcessor.Process(MainUrl);
+                MessageBox.Show("Successfully imported recipe.");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Failed to import recipe.");
+            }
+            finally
+            {
+                _commandBusy = false;
+            }
         }
     }
 }

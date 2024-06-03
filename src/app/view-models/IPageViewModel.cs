@@ -1,4 +1,6 @@
-﻿namespace RecipeApp
+﻿using System.Runtime.CompilerServices;
+
+namespace RecipeApp
 {
     public interface IPageViewModel
     {
@@ -10,5 +12,9 @@
         /// ID of the view model, uesd for lookup in dictionary
         /// </summary>
         public string ID { get; }
+        /// <summary>
+        /// Initializes the viewmodel as an asynchronous operation
+        /// </summary>
+        public Task InitializeAsync();
     }
 }

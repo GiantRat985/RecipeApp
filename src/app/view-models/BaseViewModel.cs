@@ -13,8 +13,22 @@ namespace RecipeApp
         /// ID of the view model, uesd for lookup in dictionary
         /// </summary>
         public abstract string ID { get; }
-
+        /// <summary>
+        /// Event member for the <see cref="INotifyPropertyChanged"/> interface
+        /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
+        /// <summary>
+        /// Handles async initialization details
+        /// </summary>
+        /// <returns></returns>
+        public virtual Task InitializeAsync()
+        {
+            return Task.CompletedTask;
+        }
+        /// <summary>
+        /// Event invocation for the <see cref="INotifyPropertyChanged"/> interface
+        /// </summary>
+        /// <param name="name"></param>
         protected void OnPropertyChanged([CallerMemberName] string name = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

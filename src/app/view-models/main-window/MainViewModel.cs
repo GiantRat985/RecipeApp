@@ -30,17 +30,18 @@ namespace RecipeApp
             }
         }
 
-        public MainViewModel(HomeViewModel homeViewModel, ImportViewModel importViewModel)
+        public MainViewModel(HomeViewModel homeViewModel, ImportViewModel importViewModel, ViewAllViewModel viewViewModel)
         {
             // Setup navigation command
-            ChangeViewCommand = new RelayCommand(ExecuteNavigateCommand, CanExecuteNavigateCommand);
+            ChangeViewCommand = new RelayCommandAsync(ExecuteNavigateCommand, CanExecuteNavigateCommand);
 
             // Setup pages
             RegisterPage(homeViewModel);
             RegisterPage(importViewModel);
+            RegisterPage(viewViewModel);
 
             // Open home page
-            NavigateTo(homeViewModel.ID);
+            CurrentPageViewModel = homeViewModel;
         }
 
         private void RegisterPage(IPageViewModel page)
@@ -48,21 +49,24 @@ namespace RecipeApp
             Pages.Add(page.ID, page);
         }
 
-        private void NavigateTo(string pageID)
+        private async Task NavigateTo(string pageID)
         {
             if (!Pages.ContainsKey(pageID))
             {
                 throw new NullReferenceException();
             }
-            CurrentPageViewModel = Pages
+            var currentPage = Pages
                 .GetValueOrDefault(pageID)!;
+
+            CurrentPageViewModel = currentPage;
+            await currentPage.InitializeAsync();
         }
 
-        private void ExecuteNavigateCommand(object? param)
+        private async Task ExecuteNavigateCommand(object? param)
         {
             ArgumentNullException.ThrowIfNull(param);
 
-            NavigateTo((string)param);
+            await NavigateTo((string)param);
         }
 
         private bool CanExecuteNavigateCommand(object? param)

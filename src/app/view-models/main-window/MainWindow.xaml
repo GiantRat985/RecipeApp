@@ -12,7 +12,10 @@
             <local:HomeView/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type local:ImportViewModel}">
-            <local:ImportView />
+            <local:ImportView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type local:ViewAllViewModel}">
+            <local:ViewAllView/>
         </DataTemplate>
     </Window.Resources>
     
