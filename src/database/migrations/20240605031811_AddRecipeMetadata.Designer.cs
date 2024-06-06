@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RecipeApp;
 
@@ -10,9 +11,11 @@ using RecipeApp;
 namespace RecipeApp.Migrations
 {
     [DbContext(typeof(RecipeAppDbContext))]
-    partial class RecipeAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240605031811_AddRecipeMetadata")]
+    partial class AddRecipeMetadata
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.4");

@@ -28,10 +28,9 @@ namespace RecipeApp
         /// Website input url <see langword="string"/>
         /// </summary>
         public string? WebsiteUrl { get; set; }
+        public string? Title { get; set; }
+        public string? Author { get; set; }
 
-        /// <summary>
-        /// Sets the date time
-        /// </summary>
         public RecipeData()
         {
             if (DateAdded == null)

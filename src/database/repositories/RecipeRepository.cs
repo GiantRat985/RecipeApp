@@ -23,9 +23,18 @@ namespace RecipeApp
         /// <returns></returns>
         public async Task AddAsync(RecipeData item)
         {
-            using var context = _dbContextFactory.CreateDbContext();
-            await context.RecipeSet.AddAsync(item);
-            await context.SaveChangesAsync();
+            try
+            {
+                using (var context = _dbContextFactory.CreateDbContext())
+                {
+                    await context.RecipeSet.AddAsync(item);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         /// <summary>
