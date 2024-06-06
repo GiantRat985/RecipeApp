@@ -8,8 +8,9 @@ namespace RecipeApp
     /// <remarks>
     /// 
     /// </remarks>
-    public interface IParser
+    public interface IHtmlDocumentParser
     {
-        public string? Parse(string content);
+        public string? Parse(HtmlDocument content);
+        public bool TryParse(HtmlDocument content, out string? parsedData);
     }
 }

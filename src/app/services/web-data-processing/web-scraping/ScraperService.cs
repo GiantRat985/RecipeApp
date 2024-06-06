@@ -13,21 +13,21 @@ namespace RecipeApp
     /// <remarks>
     /// This class should be registered with the service collection
     /// </remarks>
-    public class ScraperService : IScraper
+    public class ScraperService
     {
         private readonly IDataFetcher _fetcher;
-        private readonly ParserManager _parserManager;
-        private readonly RecipeExtractor _recipeExtractor;
+        private readonly IHtmlDocumentParser _nodeParser;
+        private readonly MetadataScraper _metadataParser;
 
-        public ScraperService(IDataFetcher fetcher)
+        public ScraperService(IDataFetcher fetcher, PrintNodeParser printParser, MetadataScraper metadataParser)
         {
             _fetcher = fetcher;
-            _parserManager = new ParserManager();
-            _recipeExtractor = new RecipeExtractor(fetcher);
+            _nodeParser = printParser;
+            _metadataParser = metadataParser;
         }
 
         /// <summary>
-        /// Attempts to extract hyperlink from a url asynchronously
+        /// Attempts to extract a print page hyperlink from a url as an asynchronous operation
         /// </summary>
         /// <param name="url">targeted web page</param>
         /// <returns><see cref="string"/> contents of the recipe page.</returns>
@@ -36,20 +36,26 @@ namespace RecipeApp
         {
             // Fetch page contents
             var content = await _fetcher.FetchAndCacheAsync(url);
+            var document = Helpers.LoadHtml(content);
 
             // Parse the page
-            foreach (var parser in _parserManager)
-            {
-                var hyperlink = parser.Parse(content);
-                // If the parser successfully finds the recipe link, return the html content as a string.
-                if (!string.IsNullOrEmpty(hyperlink))
-                {
-                    return await _recipeExtractor.ExtractRecipeContents(hyperlink);
-                }
-            }
+            var link = _nodeParser.Parse(document);
+            // If none can be found
+            ParsingFailureException.ThrowIfNull(link, $"{nameof(ScrapeWebPageAsync)} failed. Unable to find data.");
+            return link!;
+        }
 
-            // If none can be found, throw exception
-            throw new ParsingFailureException($"{nameof(ScrapeWebPageAsync)} failed. Unable to find data.");
+        /// <summary>
+        /// Scrapes metadata from a webpage
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public async Task<RecipeMetadata> ScrapeMetadata(string url)
+        {
+            var content = await _fetcher.FetchAndCacheAsync(url);
+            var document = Helpers.LoadHtml(content);
+
+            return _metadataParser.ParseMetadata(document);
         }
     }
 }

@@ -4,26 +4,43 @@ using System.Linq;
 using System.Printing;
 using System.Text;
 using System.Threading.Tasks;
+using HtmlAgilityPack;
 
 namespace RecipeApp
 {
     public class WebProcessor
     {
-        private readonly IModelFactory _modelFactory;
-        private readonly IRepository<RecipeModelHtml> _repository;
-        private readonly IScraper _scraper;
+        private readonly RecipeRepository _repository;
+        private readonly ScraperService _scraper;
+        private readonly PrintPageExtractor _extractor;
 
-        public WebProcessor(IModelFactory modelFactory, IRepository<RecipeModelHtml> repository, IScraper scraper)
+        public WebProcessor(RecipeRepository repository, ScraperService scraper, PrintPageExtractor extractor)
         {
-            _modelFactory = modelFactory;
             _repository = repository;
             _scraper = scraper;
+            _extractor = extractor;
         }
 
         public async Task Process(string url)
         {
-            var content = await _scraper.ScrapeWebPageAsync(url);
-            var recipeModel = _modelFactory.CreateRecipeModel(content);
+            try
+            {
+                var printLink = await _scraper.ScrapeWebPageAsync(url);
+                var metadata = await _scraper.ScrapeMetadata(url);
+                var content = await _extractor.ExtractRecipeContents(printLink);
+                var model = new RecipeData()
+                {
+                    HtmlContent = content,
+                    WebsiteUrl = url,
+                    Title = metadata.Title,
+                    Author = metadata.Author,
+                };
+                await _repository.AddAsync(model);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
