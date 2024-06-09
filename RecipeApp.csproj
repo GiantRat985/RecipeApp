@@ -9,18 +9,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="src\app\services\web-data-processing\data-formatting\**" />
-    <EmbeddedResource Remove="src\app\services\web-data-processing\data-formatting\**" />
-    <None Remove="src\app\services\web-data-processing\data-formatting\**" />
-    <Page Remove="src\app\services\web-data-processing\data-formatting\**" />
+    <Compile Remove="src\app\web-data-processing\data-formatting\**" />
+    <Compile Remove="src\helpers\**" />
+    <EmbeddedResource Remove="src\app\web-data-processing\data-formatting\**" />
+    <EmbeddedResource Remove="src\helpers\**" />
+    <None Remove="src\app\web-data-processing\data-formatting\**" />
+    <None Remove="src\helpers\**" />
+    <Page Remove="src\app\web-data-processing\data-formatting\**" />
+    <Page Remove="src\helpers\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -28,13 +31,14 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2535.41" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.122" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="appsettings.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Folder Include="src\helpers\" />
   </ItemGroup>
 
 </Project>

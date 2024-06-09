@@ -9,7 +9,7 @@ namespace RecipeApp
         /// </summary>
         public string Name { get; }
         /// <summary>
-        /// ID of the view model, uesd for lookup in dictionary
+        /// ID of the view model, used as a dictionary key
         /// </summary>
         public string ID { get; }
         /// <summary>

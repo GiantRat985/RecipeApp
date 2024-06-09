@@ -3,8 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:RecipeApp" d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:RecipeApp" 
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         Title="MainWindow" Height="450" Width="800">
 
     <Window.Resources>
@@ -14,8 +16,11 @@
         <DataTemplate DataType="{x:Type local:ImportViewModel}">
             <local:ImportView/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type local:ViewAllViewModel}">
-            <local:ViewAllView/>
+        <DataTemplate DataType="{x:Type local:DisplayAllViewModel}">
+            <local:DisplayAllView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type local:EntityViewModel}">
+            <local:EntityView/>
         </DataTemplate>
     </Window.Resources>
     
@@ -32,7 +37,7 @@
 
         <!--Left side navigation panel-->
         <StackPanel Grid.Row="1" Grid.Column="0">
-            <ItemsControl ItemsSource="{Binding Pages.Values}">
+            <ItemsControl ItemsSource="{Binding NavigationService.Pages.Values}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Button Content="{Binding Name}"
@@ -48,7 +53,7 @@
 
         <Frame Grid.Row="1" Grid.Column="1"
                x:Name="MainFrame"
-               Content="{Binding CurrentPageViewModel}"
+               Content="{Binding NavigationService.CurrentPageViewModel}"
                NavigationUIVisibility="Hidden"/>
     </Grid>
 </Window>

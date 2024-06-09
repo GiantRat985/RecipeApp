@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using RecipeApp.src;
-using AutoMapper;
 
 namespace RecipeApp
 {
@@ -38,24 +37,45 @@ namespace RecipeApp
         {
             var serviceCollection = new ServiceCollection()
                 .AddScoped<MainWindow>()
-
-                // Setup view models
-                .AddScoped<MainViewModel>()
-                .AddScoped<HomeViewModel>()
-                .AddScoped<ImportViewModel>()
-                .AddTransient<ViewAllViewModel>()
-                
                 // Setup dbcontext
                 .AddSingleton<RecipeAppDbContextFactory>(sp => new(AppConfig.Settings.DbConnectionString))
-
-                // Setup services
-                .AddScoped<IDataFetcher, DataFetcher>()
-                .AddScoped<IScraper, ScraperService>()
-                .AddScoped<WebProcessor>()
-                .AddTransient<RecipeRepository>()
                 ;
             
+            ConfigureServices(serviceCollection);
+            ConfigureWebProcessing(serviceCollection);
+            ConfigureViewModels(serviceCollection);
+
             _serviceProvider = serviceCollection.BuildServiceProvider();
+        }
+
+
+        private void ConfigureServices(IServiceCollection services)
+        {
+            services.AddTransient<RecipeRepository>();
+            services.AddSingleton<WpfNavigationService>();
+            services.AddSingleton<PageMediator>();
+        }
+
+        private void ConfigureWebProcessing(IServiceCollection services)
+        {
+            services
+                .AddScoped<IDataFetcher, DataFetcher>()
+                .AddScoped<ScraperService>()
+                .AddScoped<WebProcessor>()
+                .AddTransient<PrintPageExtractor>()
+                .AddTransient<MetadataScraper>()
+                .AddTransient<PrintNodeParser>();
+        }
+
+        private void ConfigureViewModels(IServiceCollection services)
+        {
+            // Setup view models
+            services
+                .AddScoped<MainViewModel>()
+                .AddScoped<HomeViewModel>()
+                .AddScoped<EntityViewModel>()
+                .AddTransient<ImportViewModel>()
+                .AddTransient<DisplayAllViewModel>();
         }
 
         private void CreateDbContexts()
