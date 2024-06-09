@@ -26,13 +26,11 @@ namespace RecipeApp
             }
         }
 
-        private readonly PageMediator _mediator;
         private string? _url;
 
-        public EntityViewModel(PageMediator mediator)
+        public EntityViewModel(RecipeData data)
         {
-            _mediator = mediator;
-            _mediator.Subscribe(MessageType.Data, ReceiveData);
+            Data = data;
         }
 
         private void ReceiveData(object? message)

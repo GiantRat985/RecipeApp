@@ -15,16 +15,26 @@ namespace RecipeApp
         public override string ID => nameof(DisplayAllViewModel);
         public IEnumerable<RecipeData> RecipeDataList { get; set; } = [];
         public ICommand OpenEntityCommand { get; }
+        public BaseViewModel? SelectedEntity { get => _selectedEntity;
+            set
+            {
+                if (_selectedEntity != value)
+                {
+                    _selectedEntity = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
-        private readonly PageMediator _mediator;
         private readonly RecipeRepository _recipeRepository;
+        private BaseViewModel? _selectedEntity;
 
         public DisplayAllViewModel(RecipeRepository repository, PageMediator mediator)
         {
             _recipeRepository = repository;
-            _mediator = mediator;
+            SelectedEntity = this;
 
-            OpenEntityCommand = new RelayCommandAsync(ExecuteOpenSelected, CanExecuteOpenSelected);
+            OpenEntityCommand = new RelayCommand(ExecuteOpenSelected, p => true);
         }
 
         public override async Task InitializeAsync()
@@ -33,22 +43,10 @@ namespace RecipeApp
             RecipeDataList = databaseData;
         }
 
-        public void SendSelectedRecipe(RecipeData data)
+        private void ExecuteOpenSelected(object? arg)
         {
-            _mediator.Publish(MessageType.Data, data);
-        }
-
-        private async Task ExecuteOpenSelected(object? arg)
-        {
-            // Sends the selected item to open in the new page
-            _mediator.Publish(MessageType.Data, arg);
-            // Sends message to navigate to the "view" page
-            await _mediator.PublishAsync(MessageType.Navigation, "EntityViewModel");
-        }
-
-        private bool CanExecuteOpenSelected(object? arg)
-        {
-            return true;
+            ArgumentNullException.ThrowIfNull(arg, nameof(arg));
+            SelectedEntity = new EntityViewModel((RecipeData)arg);
         }
     }
 }

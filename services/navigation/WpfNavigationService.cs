@@ -28,15 +28,13 @@ namespace RecipeApp
         private IPageViewModel? _currentPageViewModel;
         private PageMediator _pageMediator;
 
-        public WpfNavigationService(HomeViewModel homeViewModel, ImportViewModel importViewModel, 
-            DisplayAllViewModel viewViewModel, EntityViewModel entityViewModel, 
+        public WpfNavigationService(HomeViewModel homeViewModel, ImportViewModel importViewModel, DisplayAllViewModel viewViewModel,  
             PageMediator pageMediator)
         {
             // Setup pages
             RegisterPage(homeViewModel);
             RegisterPage(importViewModel);
             RegisterPage(viewViewModel);
-            RegisterPage(entityViewModel);
             // Open home page
             CurrentPageViewModel = homeViewModel;
 

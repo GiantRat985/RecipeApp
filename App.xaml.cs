@@ -73,7 +73,6 @@ namespace RecipeApp
             services
                 .AddScoped<MainViewModel>()
                 .AddScoped<HomeViewModel>()
-                .AddScoped<EntityViewModel>()
                 .AddTransient<ImportViewModel>()
                 .AddTransient<DisplayAllViewModel>();
         }
