@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using RecipeApp.src;
+using CoreHtmlToImage;
 
 namespace RecipeApp
 {
@@ -54,6 +55,7 @@ namespace RecipeApp
             services.AddTransient<RecipeRepository>();
             services.AddSingleton<WpfNavigationService>();
             services.AddSingleton<PageMediator>();
+            services.AddTransient<HtmlConverter>();
         }
 
         private void ConfigureWebProcessing(IServiceCollection services)
@@ -64,7 +66,8 @@ namespace RecipeApp
                 .AddScoped<WebProcessor>()
                 .AddTransient<PrintPageExtractor>()
                 .AddTransient<MetadataScraper>()
-                .AddTransient<PrintNodeParser>();
+                .AddTransient<PrintNodeParser>()
+                .AddTransient<RecipeFormatter>();
         }
 
         private void ConfigureViewModels(IServiceCollection services)
