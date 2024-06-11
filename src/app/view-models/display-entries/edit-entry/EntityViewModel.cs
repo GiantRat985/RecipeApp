@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 using Microsoft.Web.WebView2.Wpf;
 
 namespace RecipeApp
@@ -11,44 +12,38 @@ namespace RecipeApp
     {
         public override string Name => "View";
         public override string ID => nameof(EntityViewModel);
-        public RecipeData? Data { get; private set; }
         public event EventHandler? EntityLoaded;
-        public string? Url
+
+        public BitmapImage? RecipeImage
         {
-            get => _url;
-            private set
+            get => _recipeImage;
+            set
             {
-                if (_url != value)
+                if (value != _recipeImage)
                 {
-                    _url = value;
+                    _recipeImage = value;
                     OnPropertyChanged();
                 }
             }
         }
 
-        private string? _url;
+        private RecipeData? _data;
+        private BitmapImage? _recipeImage;
+        private RecipeFormatter _recipeFormatter;
 
-        public EntityViewModel(RecipeData data)
+        public EntityViewModel(RecipeData data, RecipeFormatter recipeFormatter)
         {
-            Data = data;
+            _data = data;
+            _recipeFormatter = recipeFormatter;
         }
 
-        private void ReceiveData(object? message)
+        public override Task InitializeAsync()
         {
-            ArgumentNullException.ThrowIfNull(message, nameof(message));
-            if (message is not RecipeData)
-            {
-                throw new ArgumentException($"Parameter {message} not of the correct type.");
-            }
+            ArgumentNullException.ThrowIfNull(_data, nameof(_data));
+            ArgumentNullException.ThrowIfNull(_data.RecipeImage, nameof(_data));
 
-            var data = (RecipeData)message;
-            Url = data.WebsiteUrl!;
-            OnEntityLoaded();
-        }
-
-        private void OnEntityLoaded()
-        {
-            EntityLoaded?.Invoke(this, new EventArgs());
+            RecipeImage = _recipeFormatter.ByteArrayToImage(_data.RecipeImage);
+            return Task.CompletedTask;
         }
     }
 }

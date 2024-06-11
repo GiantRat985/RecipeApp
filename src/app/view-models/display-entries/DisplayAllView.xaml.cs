@@ -25,9 +25,17 @@ namespace RecipeApp
             InitializeComponent();
         }
 
-        private void ItemDoubleClicked(object sender, MouseButtonEventArgs e)
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
+            var context = (DisplayAllViewModel)DataContext;
+            var senderContext = ((Control)sender).DataContext;
 
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this entry?\nThis action cannot be undone.", "Confirm", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                context.DeleteCommand.Execute((RecipeData)senderContext);
+            }
         }
     }
 }

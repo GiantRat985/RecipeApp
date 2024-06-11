@@ -7,7 +7,8 @@
       xmlns:local="clr-namespace:RecipeApp"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance Type=local:DisplayAllViewModel}"
-      Title="DisplayAllPage">
+      Title="DisplayAllPage"
+      x:Name="DisplayAllPage">
 
     <Page.Resources>
         
@@ -15,19 +16,20 @@
         
         <DataTemplate DataType="{x:Type local:DisplayAllViewModel}">
             <ListBox x:Name="RecipeDisplay" ItemsSource="{Binding RecipeDataList, Mode=OneWay}">
+                
                 <b:Interaction.Triggers>
                     <b:EventTrigger EventName="MouseDoubleClick">
                         <b:InvokeCommandAction Command="{Binding OpenEntityCommand}" 
                                                CommandParameter="{Binding ElementName=RecipeDisplay, Path=SelectedItem}"/>
                     </b:EventTrigger>
                 </b:Interaction.Triggers>
-                
+
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel MaxWidth="700"/>
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
-                
+
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <DataTemplate.Resources>
@@ -42,33 +44,42 @@
                                 </Style.Triggers>
                             </Style>
                         </DataTemplate.Resources>
-                        
+
                         <Grid Width="300" Height="Auto" Background="LightGray" Margin="5 5 5 5">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            
+
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
 
+                            <!-- Place context menu buttons here -->
+                            <Grid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Delete" 
+                                              Click="MenuItem_Click"/>
+                                </ContextMenu>
+                            </Grid.ContextMenu>
+
                             <TextBlock Grid.Column="0" Grid.Row="0" 
                                Text="{Binding Title}" HorizontalAlignment="Left"/>
-                            
+
                             <TextBlock Grid.Column="1" Grid.Row="0" 
                                Text="{Binding DateAdded}" HorizontalAlignment="Right"/>
-                            
+
                             <TextBlock Grid.Column="0" Grid.Row="1"
                                Text="{Binding Author}" HorizontalAlignment="Left"/>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+
         </DataTemplate>
         
-        <!-- Specifies view for when a specific item is selected to be viewed -->
+        <!-- Specifies view for when an item is selected -->
         
         <DataTemplate DataType="{x:Type local:EntityViewModel}">
             <local:EntityView/>

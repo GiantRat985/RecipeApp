@@ -10,6 +10,8 @@
       Title="EntityView">
 
     <Grid>
-        <wv2:WebView2 Name="webView" Source="{Binding Data.WebsiteUrl}"/>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Image Source="{Binding RecipeImage}" Stretch="Uniform"/>
+        </ScrollViewer>
     </Grid>
 </Page>
