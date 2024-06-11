@@ -28,7 +28,17 @@ namespace RecipeApp
         /// Website input url <see langword="string"/>
         /// </summary>
         public string? WebsiteUrl { get; set; }
+        /// <summary>
+        /// <see langword="byte"/>[] of a recipe image
+        /// </summary>
+        public byte[]? RecipeImage { get; set; }
+        /// <summary>
+        /// Recipe title
+        /// </summary>
         public string? Title { get; set; }
+        /// <summary>
+        /// Recipe author
+        /// </summary>
         public string? Author { get; set; }
 
         public RecipeData()
