@@ -13,8 +13,8 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
             <TextBox Text="{Binding MainUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     MinHeight="30"
-                     MinWidth="500"/>
+                     Height="Auto"
+                     Width="500"/>
             <Button Content="Import"
                     Command="{Binding ImportCommand}"
                     CommandParameter="{Binding ID}"
