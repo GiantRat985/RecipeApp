@@ -53,9 +53,9 @@ namespace RecipeApp
                 // ...parse for attribute using each xpath query...
                 foreach (var query in  _queries)
                 {
-                    var link = node.GetAttributeValue(query, null);
+                    var link = node.GetAttributeValue(query, "");
                     // ...if found, return link, if not, continue to iterate
-                    if (!string.IsNullOrEmpty(link) && ValidateLink(link))
+                    if (ValidateLink(link))
                     {
                         return link;
                     }
@@ -64,7 +64,7 @@ namespace RecipeApp
             throw new ParsingFailureException($"{nameof(PrintNodeParser)} was unable to find a valid link in print nodes.");
         }
 
-        protected bool ValidateLink(string url)
+        private bool ValidateLink(string url)
         {
             if (url.Contains("https") || url.Contains(".com") || url.Contains(".org"))
             {

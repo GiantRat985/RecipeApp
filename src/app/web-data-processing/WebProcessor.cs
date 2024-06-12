@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Printing;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using RecipeApp.Exceptions;
 
 namespace RecipeApp
 {
@@ -25,26 +27,19 @@ namespace RecipeApp
 
         public async Task Process(string url)
         {
-            try
+            var printLink = await _scraper.ScrapeWebPageAsync(url);
+            var metadata = await _scraper.ScrapeMetadata(url);
+            var content = await _extractor.ExtractRecipeContents(printLink);
+            var imageData = _formatter.HtmlToByteArray(content);
+            var model = new RecipeData()
             {
-                var printLink = await _scraper.ScrapeWebPageAsync(url);
-                var metadata = await _scraper.ScrapeMetadata(url);
-                var content = await _extractor.ExtractRecipeContents(printLink);
-                var imageData = _formatter.HtmlToByteArray(content);
-                var model = new RecipeData()
-                {
-                    HtmlContent = content,
-                    WebsiteUrl = url,
-                    RecipeImage = imageData,
-                    Title = metadata.Title,
-                    Author = metadata.Author,
-                };
-                await _repository.AddAsync(model);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+                HtmlContent = content,
+                WebsiteUrl = url,
+                RecipeImage = imageData,
+                Title = metadata.Title,
+                Author = metadata.Author,
+            };
+            await _repository.AddAsync(model);
         }
     }
 }

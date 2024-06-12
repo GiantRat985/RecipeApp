@@ -23,7 +23,7 @@ namespace RecipeApp
         public virtual bool TryParse(HtmlDocument content, out string? parsedData)
         {
             parsedData = Parse(content);
-            return string.IsNullOrWhiteSpace(parsedData);
+            return !string.IsNullOrWhiteSpace(parsedData);
         }
     }
 }
