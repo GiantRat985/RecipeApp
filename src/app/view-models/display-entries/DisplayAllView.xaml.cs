@@ -32,7 +32,7 @@ namespace RecipeApp
 
             MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this entry?\nThis action cannot be undone.", "Confirm", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
 
-            if (result == MessageBoxResult.Yes)
+            if (result == MessageBoxResult.OK)
             {
                 context.DeleteCommand.Execute((RecipeData)senderContext);
             }
