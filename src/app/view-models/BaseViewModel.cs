@@ -19,6 +19,7 @@ namespace RecipeApp
         public event PropertyChangedEventHandler? PropertyChanged;
         /// <summary>
         /// Handles async initialization details
+        /// Called each time the page is loaded
         /// </summary>
         /// <returns></returns>
         public virtual Task InitializeAsync()
